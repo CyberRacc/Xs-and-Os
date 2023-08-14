@@ -1,0 +1,43 @@
+
+
+:root {
+    --btn-global-color: #7c1b7f;
+    --btn-hover-color: #8d2891;
+    --btn-active-color: #3f1c53;
+    --header-color: #272a59;
+    --gloabl-background-color: #2b0936;
+    --highlight-modal-color: #536993;
+    --global-box-shadow: 1px 1px 5px 0px #000;;
+}
+
+body {
+    background-color: var(--gloabl-background-color);
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    display: grid;
+    background-color: var(--header-color);
+    margin: 0;
+    padding: 0;
+    box-shadow: var(--global-box-shadow);
+}
+
+button {
+    padding: 8px;
+    border: none;
+    background-color: var(--btn-global-color);
+}
+
+button:hover {
+    background-color: var(--btn-hover-color);
+}
+
+button:active {
+    background-color: var(--btn-active-color);
+}
+
+#logo {
+    color: white;
+}
