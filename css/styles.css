@@ -23,6 +23,7 @@ header {
     background-color: var(--header-color);
     color: white;
     width: 100%;
+    height: 75px;
     justify-content: center;
     justify-items: center;
     align-items: center;
@@ -52,7 +53,13 @@ button:active {
 }
 
 .main {
-    height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 4fr 1fr;
+    height: calc(100vh - 125px);
+    align-items: center ;
+    justify-content: center;
+    align-content: center;
 }
 
 #board-container {
@@ -84,6 +91,11 @@ button:active {
     align-items: center;
 }
 
+dialog {
+    width: 250px;
+    height: 500px;
+}
+
 footer {
     display: flex;
     background-color: var(--header-color);
@@ -91,6 +103,7 @@ footer {
     position: absolute;
     bottom: 0;
     width: 100%;
+    height: 50px;
     justify-content: center;
     justify-items: center;
     align-items: center;
