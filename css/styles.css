@@ -4,8 +4,8 @@
     --btn-global-color: #7c1b7f;
     --btn-hover-color: #8d2891;
     --btn-active-color: #3f1c53;
-    --header-color: #272a59;
-    --gloabl-background-color: #2b0936;
+    --header-color: #4a4f8d;
+    --gloabl-background-color: #bdbdbd;
     --highlight-modal-color: #536993;
     --global-box-shadow: 1px 1px 5px 0px #000;
     font-family: 'Manrope', sans-serif;
@@ -16,18 +16,20 @@ body {
     background-color: var(--gloabl-background-color);
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 header {
     display: flex;
     background-color: var(--header-color);
     color: white;
-    width: 100%;
     height: 75px;
     justify-content: center;
     justify-items: center;
     align-items: center;
     box-shadow: var(--global-box-shadow);
+    border-radius: 25px;
+    margin: 16px;
 }
 
 button {
@@ -56,7 +58,7 @@ button:active {
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: 4fr 1fr;
-    height: calc(100vh - 125px);
+    height: calc(100vh - 150px);
     align-items: center ;
     justify-content: center;
     align-content: center;
@@ -77,17 +79,16 @@ button:active {
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr;
     background-color: white;
-    border: 4px solid black;
+    border: px solid black;
     box-shadow: var(--global-box-shadow);
-    border-radius: 40px;
 }
 
-.board-square {
+.board-cell {
     display: flex;
     border: 2px solid black;
 }
 
-.board-square:hover {
+.board-cell:hover {
     background-color: grey;
     
 }
@@ -109,6 +110,10 @@ button:active {
 form {
     padding: 0;
     margin: 0;
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    height: 100%;
+
 }
 
 input {
@@ -117,24 +122,64 @@ input {
     font-size: 1rem;
     margin: 0;
     box-sizing: border-box;
+    border-radius: 20px;
+    border: 1px solid rgb(207, 207, 207);
+}
+
+#name-input {
+    display: block;
+    text-align: center;
+}
+
+#form-buttons {
+    width: 100%;
+    display: grid;
+    justify-self: end;
+    align-self: self-end;
+    gap: 12px;
+}
+
+#form-cancel {
+    background-color: rgb(197, 44, 44);
+}
+
+#form-cancel:hover {
+    background-color: rgb(219, 64, 64);
+}
+
+#form-cancel:active {
+    background-color: rgb(128, 38, 38);
 }
 
 dialog {
     width: 250px;
-    height: 500px;
+    height: 200px;
     border-radius: 25px;
     box-shadow: var(--global-box-shadow);
+    border: none;
 }
 
 footer {
     display: flex;
     background-color: var(--header-color);
     color: white;
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 50px;
+    height: 75px;
     justify-content: center;
     justify-items: center;
     align-items: center;
+    box-shadow: var(--global-box-shadow);
+    border-radius: 25px;
+    margin: 16px;
+}
+
+@media screen and (max-width: 768px) {
+
+    #logo {
+        justify-content: center;
+    }
+    
+    header {
+        width: 100%;
+        justify-content: center;
+    }
 }

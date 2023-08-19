@@ -37,6 +37,8 @@ const Gameboard = {
         "", "", ""
     ]
 
+    
+
 }
 
 // Factory function for creating players.
@@ -56,13 +58,16 @@ const PlayGame = (() => {
     Tranditional function declarations have their own "this" binding,
     which is typically set by how they are called. */
 
-    const checkMoveValidity = (cellIndex) => {
+    const checkMoveValidity = (currentCellIndex) => {
         // Is the selected cell empty?
         // If it is, move is valid.
         // Otherwise, move is invalid.
 
-        if (cellIndex === "") {
-            // Move is valid
+        // Checks if the current index in the gameboard array is an empty string.
+        // If it is the move is valid.
+        if (Gameboard.gameboard[currentCellIndex] === "") {
+            Gameboard.gameboard.splice(currentCellIndex, 1, "X");
+            console.log(Gameboard.gameboard);
         }
     }
 
@@ -83,15 +88,19 @@ const PlayGame = (() => {
         // When player clicks a cell, add their X or O to the cell.
         // Grab the index of the cell that was clicked.
         
-        const gameCell = document.querySelectorAll(".board-square");
+        const gameCells = document.querySelectorAll(".board-cell");
 
-        gameCell.forEach(cell => {
+        gameCells.forEach(cell => {
             cell.addEventListener("click", e => {
-                console.log(e);
-                // get index of cell that was clicked.
+                
+
+                const currentCellIndex = Number(cell.dataset.index);
+                console.log(currentCellIndex);
+
+                checkMoveValidity(currentCellIndex);
 
                 // Check if cell is empty (checkMoveValidity).
-                checkMoveValidity(cellIndex);
+                // checkMoveValidity(cellIndex);
 
                 // Assign current player's X or O to that cell.
             });
@@ -121,13 +130,12 @@ const startGame = (() => {
 
     PlayGame.createPlayer(playerName);
 
-    const createBoard = (() => {
+    const createBoard = () => {
         modal.addEventListener("reset", e => {
             modal.close();
         });
         modal.addEventListener("submit", e => {
             const mainContent = document.querySelector(".main");
-            console.log("Game Started");
             e.preventDefault();
             modal.close();
             mainContent.innerHTML = `
@@ -136,26 +144,28 @@ const startGame = (() => {
                     <p>Hello ${playerName}!<p>
                 </div>
                 <div id="board">
-                    <div class="board-square"></div>
-                    <div class="board-square"></div>
-                    <div class="board-square"></div>
-                    <div class="board-square"></div>
-                    <div class="board-square"></div>
-                    <div class="board-square"></div>
-                    <div class="board-square"></div>
-                    <div class="board-square"></div>
-                    <div class="board-square"></div>
+                    <div class="board-cell" data-index="0"></div>
+                    <div class="board-cell" data-index="1"></div>
+                    <div class="board-cell" data-index="2"></div>
+                    <div class="board-cell" data-index="3"></div>
+                    <div class="board-cell" data-index="4"></div>
+                    <div class="board-cell" data-index="5"></div>
+                    <div class="board-cell" data-index="6"></div>
+                    <div class="board-cell" data-index="7"></div>
+                    <div class="board-cell" data-index="8"></div>
                 </div>
             </div>
             <div id="game-controls">
                 <button>New Game</button>
             </div>
             `;
+
+            PlayGame.makeMove();
         });
-    })(); // EIFE
+    } 
+
     
     btnPlay.addEventListener("click", e => {
-        console.log(e);
         modal.showModal();
         createBoard();
     });
@@ -163,3 +173,4 @@ const startGame = (() => {
     return modal; // now in the public scope
 
 })(); // EIFE (Immediately invoked function expression)
+
