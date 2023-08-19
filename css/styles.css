@@ -60,12 +60,14 @@ button:active {
     align-items: center ;
     justify-content: center;
     align-content: center;
+    color: white;
 }
 
 #board-container {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
 }
 
 #board {
@@ -94,6 +96,14 @@ button:active {
     display: grid;
     justify-content: center;
     align-items: center;
+}
+
+#btn-play {
+    width: 200px;
+    height: 100px;
+    align-self: center;
+    justify-self: center;
+    font-size: 1.2rem;
 }
 
 form {
