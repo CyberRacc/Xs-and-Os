@@ -28,6 +28,9 @@
 // Store the gameboard as an array inside of a Gameboard object.
 const Gameboard = {
 
+    // Array to store current state of the board.
+    // Each array element represents each cell in the game.
+    // Empty strings should be filled with an X or an O as the game goes on.
     gameboard: [
         "", "", "",
         "", "", "",
@@ -36,59 +39,109 @@ const Gameboard = {
 
 }
 
-
-// Factory function for creating players.
-function createPlayer(name, symbol) {
-    return {
-        name: name,
-        symbol: symbol,
-        makeMove: function(position) {
-            // logic for making a move
-        }
-    };
+// Module containing general functions.
+const GeneralFunctions = {
+    createBoard: () => {
+        const btnCancelForm = document.querySelector("#btn-cancel-form");
+        btnCancelForm.addEventListener("click", e => {
+            modal.close();
+        });
+        const btnStartGame = document.querySelector("#btn-start-game");
+        btnStartGame.addEventListener("submit", e => {
+            const mainContent = document.querySelector(".main");
+            e.preventDefault();
+            mainContent.innerHTML = `
+            <div id="board-container">
+                <div id="board">
+                    <div class="board-square"><img src="assets/icons/circle.svg" alt=""></div>
+                    <div class="board-square"><img src="assets/icons/circle.svg" alt=""></div>
+                    <div class="board-square"><img src="assets/icons/cross.svg" alt=""></div>
+                    <div class="board-square"><img src="assets/icons/cross.svg" alt=""></div>
+                    <div class="board-square"><img src="assets/icons/circle.svg" alt=""></div>
+                    <div class="board-square"><img src="assets/icons/circle.svg" alt=""></div>
+                    <div class="board-square"><img src="assets/icons/cross.svg" alt=""></div>
+                    <div class="board-square"><img src="assets/icons/cross.svg" alt=""></div>
+                    <div class="board-square"><img src="assets/icons/circle.svg" alt=""></div>
+                </div>
+            </div>
+            <div id="game-controls">
+                <button>New Game</button>
+            </div>
+            `;
+        });
+    }
 }
 
-const playerX = createPlayer("CyberRacc", "X");
-const playerO = createPlayer("CPU", "O");
+// Factory function for creating players.
 
-const startGame = function() {
+
+// Module containing functions for when the game is actually running.
+const PlayGame = (() => {
+    // Private functions
+
+/*     I've gone for arrow functions here as I prefer them and do not
+    need the "this" keyword.
+
+    The main difference between arrow functions and traditional
+    function declarations is that arrow functions don't have their own
+    "this", they inherit "this" from the enclsosing scope.
+
+    Tranditional function declarations have their own "this" binding,
+    which is typically set by how they are called. */
+
+    const checkMoveValidity = () => {
+        // Is the selected cell empty?
+        // If it is, move is valid.
+        // Otherwise, move is invalid.
+    }
+
+    const makeMove = () => {
+        // When player clicks a cell, add their X or O to the cell.
+        // Grab the index of the cell that was clicked.
+    }
+
+    const checkWin = () => {
+        // Check for 3 of the same letter in a row.
+    }
+
+    const createPlayer = (name, symbol) => {
+
+        const nameInput = document.querySelector("#player-name");
+        const playerName = nameInput.value;
+        
+        return {
+            name: playerName,
+            symbol: "X"
+        };
+    }
+
+    const playerX = createPlayer("CyberRacc", "X");
+    const playerO = createPlayer("CPU", "O");
+    
+    return {
+        // Public functions
+
+        // Do not use () as this will invoke the functions, these are to be
+        // called later.
+
+        makeMove,
+        checkWin,
+    }
+})();
+
+
+
+const startGame = (() => {
 
     const btnPlay = document.querySelector("#btn-play");
     const modal = document.querySelector("#modal");
+    
 
     btnPlay.addEventListener("click", e => {
         console.log(e);
         modal.showModal();
         createBoard();
     });
-}(); // EIFE (Immediately invoked function expression)
+    return modal; // now in the public scope
 
-function createBoard() {
-    const btnStartGame = document.querySelector("#btn-start-game");
-    btnStartGame.addEventListener("submit", e => {
-
-        const mainContent = document.querySelector(".main");
-
-        e.preventDefault();
-
-        mainContent.innerHTML = `
-        <div id="board-container">
-            <div id="board">
-                <div class="board-square"><img src="assets/icons/circle.svg" alt=""></div>
-                <div class="board-square"><img src="assets/icons/circle.svg" alt=""></div>
-                <div class="board-square"><img src="assets/icons/cross.svg" alt=""></div>
-                <div class="board-square"><img src="assets/icons/cross.svg" alt=""></div>
-                <div class="board-square"><img src="assets/icons/circle.svg" alt=""></div>
-                <div class="board-square"><img src="assets/icons/circle.svg" alt=""></div>
-                <div class="board-square"><img src="assets/icons/cross.svg" alt=""></div>
-                <div class="board-square"><img src="assets/icons/cross.svg" alt=""></div>
-                <div class="board-square"><img src="assets/icons/circle.svg" alt=""></div>
-            </div>
-        </div>
-        <div id="game-controls">
-            <button>New Game</button>
-        </div>
-        `;
-    });
-}
-
+})(); // EIFE (Immediately invoked function expression)
