@@ -39,39 +39,6 @@ const Gameboard = {
 
 }
 
-// Module containing general functions.
-const GeneralFunctions = {
-    createBoard: () => {
-        const btnCancelForm = document.querySelector("#btn-cancel-form");
-        btnCancelForm.addEventListener("click", e => {
-            modal.close();
-        });
-        const btnStartGame = document.querySelector("#btn-start-game");
-        btnStartGame.addEventListener("submit", e => {
-            const mainContent = document.querySelector(".main");
-            e.preventDefault();
-            mainContent.innerHTML = `
-            <div id="board-container">
-                <div id="board">
-                    <div class="board-square"><img src="assets/icons/circle.svg" alt=""></div>
-                    <div class="board-square"><img src="assets/icons/circle.svg" alt=""></div>
-                    <div class="board-square"><img src="assets/icons/cross.svg" alt=""></div>
-                    <div class="board-square"><img src="assets/icons/cross.svg" alt=""></div>
-                    <div class="board-square"><img src="assets/icons/circle.svg" alt=""></div>
-                    <div class="board-square"><img src="assets/icons/circle.svg" alt=""></div>
-                    <div class="board-square"><img src="assets/icons/cross.svg" alt=""></div>
-                    <div class="board-square"><img src="assets/icons/cross.svg" alt=""></div>
-                    <div class="board-square"><img src="assets/icons/circle.svg" alt=""></div>
-                </div>
-            </div>
-            <div id="game-controls">
-                <button>New Game</button>
-            </div>
-            `;
-        });
-    }
-}
-
 // Factory function for creating players.
 
 
@@ -89,34 +56,47 @@ const PlayGame = (() => {
     Tranditional function declarations have their own "this" binding,
     which is typically set by how they are called. */
 
-    const checkMoveValidity = () => {
+    const checkMoveValidity = (cellIndex) => {
         // Is the selected cell empty?
         // If it is, move is valid.
         // Otherwise, move is invalid.
+
+        if (cellIndex === "") {
+            // Move is valid
+        }
     }
 
-    const makeMove = () => {
-        // When player clicks a cell, add their X or O to the cell.
-        // Grab the index of the cell that was clicked.
-    }
+
 
     const checkWin = () => {
         // Check for 3 of the same letter in a row.
     }
 
-    const createPlayer = (name, symbol) => {
-
-        const nameInput = document.querySelector("#player-name");
-        const playerName = nameInput.value;
-        
+    const createPlayer = (playerName) => {
         return {
-            name: playerName,
-            symbol: "X"
+            playerName,
+            playerSymbol: "X"
         };
     }
 
-    const playerX = createPlayer("CyberRacc", "X");
-    const playerO = createPlayer("CPU", "O");
+    const makeMove = () => {
+        // When player clicks a cell, add their X or O to the cell.
+        // Grab the index of the cell that was clicked.
+        
+        const gameCell = document.querySelectorAll(".board-square");
+
+        gameCell.forEach(cell => {
+            cell.addEventListener("click", e => {
+                console.log(e);
+                // get index of cell that was clicked.
+
+                // Check if cell is empty (checkMoveValidity).
+                checkMoveValidity(cellIndex);
+
+                // Assign current player's X or O to that cell.
+            });
+        });
+    }
     
     return {
         // Public functions
@@ -124,6 +104,7 @@ const PlayGame = (() => {
         // Do not use () as this will invoke the functions, these are to be
         // called later.
 
+        createPlayer,
         makeMove,
         checkWin,
     }
@@ -135,13 +116,50 @@ const startGame = (() => {
 
     const btnPlay = document.querySelector("#btn-play");
     const modal = document.querySelector("#modal");
-    
+    const nameInput = document.querySelector("#player-name");
+    const playerName = nameInput.value;
 
+    PlayGame.createPlayer(playerName);
+
+    const createBoard = (() => {
+        modal.addEventListener("reset", e => {
+            modal.close();
+        });
+        modal.addEventListener("submit", e => {
+            const mainContent = document.querySelector(".main");
+            console.log("Game Started");
+            e.preventDefault();
+            modal.close();
+            mainContent.innerHTML = `
+            <div id="board-container">
+                <div>
+                    <p>Hello ${playerName}!<p>
+                </div>
+                <div id="board">
+                    <div class="board-square"></div>
+                    <div class="board-square"></div>
+                    <div class="board-square"></div>
+                    <div class="board-square"></div>
+                    <div class="board-square"></div>
+                    <div class="board-square"></div>
+                    <div class="board-square"></div>
+                    <div class="board-square"></div>
+                    <div class="board-square"></div>
+                </div>
+            </div>
+            <div id="game-controls">
+                <button>New Game</button>
+            </div>
+            `;
+        });
+    })(); // EIFE
+    
     btnPlay.addEventListener("click", e => {
         console.log(e);
         modal.showModal();
         createBoard();
     });
+
     return modal; // now in the public scope
 
 })(); // EIFE (Immediately invoked function expression)
