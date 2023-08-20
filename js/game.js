@@ -96,9 +96,11 @@ const PlayGame = (() => {
     }
 
     const createPlayer = (playerName) => {
+        
+        const playerSymbol = "X"
         return {
             playerName,
-            playerSymbol: "X"
+            playerSymbol
         };
     }
 
@@ -114,7 +116,9 @@ const PlayGame = (() => {
                 console.log(currentCellIndex);
 
                 checkMoveValidity(currentCellIndex);
-                Gameboard.gameboard.splice(currentCellIndex, 1, playerSymbol);
+                Gameboard.gameboard.splice(currentCellIndex, 1, createPlayer.playerSymbol);
+
+                updateCells();
 
                 checkWin();
 
@@ -155,14 +159,16 @@ const PlayGame = (() => {
         }
 
         const cpuHardMove = () => {
-
+            
         }
     }
 
     const updateCells = () => {
         Gameboard.gameboard.forEach(cell => {
-            if (cell !== "") {
-                // Add playerSymbol to the current index/cell.
+            if (cell === "") {
+                let currentCell = document.dataset.index;
+
+                currentCell.innerHTML = `<img src="/assets/icons/raccoon-svgrepo-com.svg alt="">`
             }
         })
     }
