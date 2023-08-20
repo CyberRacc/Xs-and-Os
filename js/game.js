@@ -25,29 +25,6 @@
         Ensure that related functionalities are bundles together.
 */
 
-// Store the gameboard as an array inside of a Gameboard object.
-const Gameboard = {
-
-    // Array to store current state of the board.
-    // Each array element represents each cell in the game.
-    // Empty strings should be filled with an X or an O as the game goes on.
-    gameboard: [
-        "", "", "",
-        "", "", "",
-        "", "", ""
-    ]
-
-    
-
-}
-
-// Factory function for creating players.
-
-
-// Module containing functions for when the game is actually running.
-const PlayGame = (() => {
-    // Private functions
-
 /*     I've gone for arrow functions here as I prefer them and do not
     need the "this" keyword.
 
@@ -58,23 +35,64 @@ const PlayGame = (() => {
     Tranditional function declarations have their own "this" binding,
     which is typically set by how they are called. */
 
+// Store the gameboard as an array inside of a Gameboard object.
+const Gameboard = {
+
+    // Array to store current state of the board.
+    // Each array index represents each cell in the game.
+    // Empty strings should be filled with an X or an O as the game goes on.
+    gameboard: [
+        "", "", "",
+        "", "", "",
+        "", "", ""
+    ]
+}
+
+// Factory function for creating players.
+
+
+// Module containing functions for when the game is actually running.
+const PlayGame = (() => {
+
+    // Private functions
+    
     const checkMoveValidity = (currentCellIndex) => {
-        // Is the selected cell empty?
-        // If it is, move is valid.
-        // Otherwise, move is invalid.
 
         // Checks if the current index in the gameboard array is an empty string.
         // If it is the move is valid.
         if (Gameboard.gameboard[currentCellIndex] === "") {
-            Gameboard.gameboard.splice(currentCellIndex, 1, "X");
             console.log(Gameboard.gameboard);
+            console.log("Move is valid");
+            return true;
+        } else {
+            console.log("Move is invalid");
+            return false;
         }
     }
 
-
-
     const checkWin = () => {
+
         // Check for 3 of the same letter in a row.
+
+        // shorthand for gameboard array
+        const board = Gameboard.gameboard;
+
+        const winningCombinations = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6]
+        ]
+
+        const isWin = winningCombinations.some(winComb => {
+            if (winComb == board) {
+                console.log("X Wins!");
+            }
+        });
     }
 
     const createPlayer = (playerName) => {
@@ -85,26 +103,68 @@ const PlayGame = (() => {
     }
 
     const makeMove = () => {
-        // When player clicks a cell, add their X or O to the cell.
-        // Grab the index of the cell that was clicked.
         
         const gameCells = document.querySelectorAll(".board-cell");
 
         gameCells.forEach(cell => {
             cell.addEventListener("click", e => {
                 
-
+                // Grab the index of the cell that was clicked & convert to number.
                 const currentCellIndex = Number(cell.dataset.index);
                 console.log(currentCellIndex);
 
                 checkMoveValidity(currentCellIndex);
+                Gameboard.gameboard.splice(currentCellIndex, 1, playerSymbol);
 
-                // Check if cell is empty (checkMoveValidity).
-                // checkMoveValidity(cellIndex);
+                checkWin();
+
 
                 // Assign current player's X or O to that cell.
             });
         });
+        
+    }
+
+    const cpuPlayer = () => {
+
+        // Two difficulties; easy and hard.
+        // Easy it a random number so the cpu does not actively try to win.
+
+        // Hard, the AI actively tries to win by blocking the player.
+        // But it's boring to never be able to win so there must be a random
+        // chance that the AI makes a move that is random. This makes winning
+        // rare but possible.
+
+        const cpuPlayerSymbol = "O";
+
+        const cpuEasyMove = () => {
+            // Use random number from 0 to 8 to get random move.
+            // Check if number is a valid move.
+
+            const getRandomMove = () => {
+                let currentMove = Math.random;
+                return currentMove;
+            }
+
+            if (currentMove > 0.8) {
+                // Number is invalid
+                getRandomMove();
+            } else {
+                checkMoveValidity();
+            }
+        }
+
+        const cpuHardMove = () => {
+
+        }
+    }
+
+    const updateCells = () => {
+        Gameboard.gameboard.forEach(cell => {
+            if (cell !== "") {
+                // Add playerSymbol to the current index/cell.
+            }
+        })
     }
     
     return {
@@ -126,16 +186,18 @@ const startGame = (() => {
     const btnPlay = document.querySelector("#btn-play");
     const modal = document.querySelector("#modal");
     const nameInput = document.querySelector("#player-name");
-    const playerName = nameInput.value;
 
-    PlayGame.createPlayer(playerName);
 
     const createBoard = () => {
-        modal.addEventListener("reset", e => {
+        modal.addEventListener("reset", () => {
             modal.close();
         });
         modal.addEventListener("submit", e => {
             const mainContent = document.querySelector(".main");
+            const playerName = nameInput.value;
+
+            PlayGame.createPlayer(playerName);
+
             e.preventDefault();
             modal.close();
             mainContent.innerHTML = `
