@@ -1,4 +1,3 @@
-
 /*
     The main goal of this project is to have as little global code
     as possible.
@@ -35,12 +34,7 @@
     Tranditional function declarations have their own "this" binding,
     which is typically set by how they are called. */
 
-// Store the gameboard as an array inside of a Gameboard object.
 const Gameboard = {
-
-    // Array to store current state of the board.
-    // Each array index represents each cell in the game.
-    // Empty strings should be filled with an X or an O as the game goes on.
     gameboard: [
         "", "", "",
         "", "", "",
@@ -48,19 +42,14 @@ const Gameboard = {
     ]
 }
 
-// Factory function for creating players.
-
-
 // Module containing functions for when the game is actually running.
-const PlayGame = (() => {
-
+const PlayGame = () => {
     // Private functions
     
     const checkMoveValidity = (currentCellIndex) => {
-
-        // Checks if the current index in the gameboard array is an empty string.
-        // If it is the move is valid.
         if (Gameboard.gameboard[currentCellIndex] === "") {
+            // Checks if the current index in the gameboard array is an empty string.
+            // If it is the move is valid.
             console.log(Gameboard.gameboard);
             console.log("Move is valid");
             return true;
@@ -71,12 +60,9 @@ const PlayGame = (() => {
     }
 
     const checkWin = () => {
-
         // Check for 3 of the same letter in a row.
-
         // shorthand for gameboard array
         const board = Gameboard.gameboard;
-
         const winningCombinations = [
             [0, 1, 2],
             [3, 4, 5],
@@ -86,113 +72,94 @@ const PlayGame = (() => {
             [2, 5, 8],
             [0, 4, 8],
             [2, 4, 6]
-        ]
+        ];
 
-        const isWin = winningCombinations.some(winComb => {
+        winningCombinations.some(winComb => {
             if (winComb == board) {
                 console.log("X Wins!");
             }
         });
     }
 
-    const createPlayer = (playerName) => {
-        
-        const playerSymbol = "X"
-        return {
-            playerName,
-            playerSymbol
-        };
-    }
-
     const makeMove = () => {
-        
         const gameCells = document.querySelectorAll(".board-cell");
 
         gameCells.forEach(cell => {
-            cell.addEventListener("click", e => {
+            cell.addEventListener("click", () => {
                 
                 // Grab the index of the cell that was clicked & convert to number.
                 const currentCellIndex = Number(cell.dataset.index);
                 console.log(currentCellIndex);
 
                 checkMoveValidity(currentCellIndex);
-                Gameboard.gameboard.splice(currentCellIndex, 1, createPlayer.playerSymbol);
+                Gameboard.gameboard.splice(currentCellIndex, 1, "X");
 
-                updateCells();
-
+                updateCells(); // Assign current player's X or O to that cell.
                 checkWin();
-
-
-                // Assign current player's X or O to that cell.
+                cpuPlayer.cpuEasyMove();
             });
         });
-        
     }
 
     const cpuPlayer = () => {
-
-        // Two difficulties; easy and hard.
-        // Easy it a random number so the cpu does not actively try to win.
-
-        // Hard, the AI actively tries to win by blocking the player.
-        // But it's boring to never be able to win so there must be a random
-        // chance that the AI makes a move that is random. This makes winning
-        // rare but possible.
-
         const cpuPlayerSymbol = "O";
 
         const cpuEasyMove = () => {
+            // Easy it a random number so the cpu does not actively try to win.
             // Use random number from 0 to 8 to get random move.
             // Check if number is a valid move.
 
             const getRandomMove = () => {
-                let currentMove = Math.random;
+                let currentMove = Math.random * 10;
                 return currentMove;
             }
 
-            if (currentMove > 0.8) {
+            if (currentMove > 8) {
                 // Number is invalid
-                getRandomMove();
+                console.log(`CPU move was ${currentMove}`);
+                getRandomMove(); // Re-gen the move.
             } else {
-                checkMoveValidity();
+                checkMoveValidity(); // Number is valid, check move validity.
+                if (checkMoveValidity == true) {
+                    updateCells(currentMove);
+                    console.log(`Move came back valid: ${currentMove}`);
+                }
             }
         }
-
         const cpuHardMove = () => {
-            
+            // Hard, the AI actively tries to win by blocking the player.
+            // But it's boring to never be able to win so there must be a random
+            // chance that the AI makes a move that is random. This makes winning rare but possible.
+
+            // Check the current status of the array.
+        }
+
+        return {
+            cpuEasyMove
         }
     }
 
     const updateCells = () => {
-        Gameboard.gameboard.forEach(cell => {
-            if (cell === "") {
-                let currentCell = document.dataset.index;
-
-                currentCell.innerHTML = `<img src="/assets/icons/raccoon-svgrepo-com.svg alt="">`
+        Gameboard.gameboard.forEach(currentIndex => {
+            if (currentIndex === "X") {
+                // Update cell with image of Panda.
+            } else if (currentIndex === "O") {
+                // Update cell with image of Raccoon.
             }
-        })
+        });
     }
-    
-    return {
-        // Public functions
-
-        // Do not use () as this will invoke the functions, these are to be
-        // called later.
-
-        createPlayer,
-        makeMove,
-        checkWin,
-    }
-})();
-
-
+}
 
 const startGame = (() => {
-
     const btnPlay = document.querySelector("#btn-play");
     const modal = document.querySelector("#modal");
     const nameInput = document.querySelector("#player-name");
 
+    // Factory function for creating players.
+    const createPlayer = (playerName) => {
+        const playerSymbol = "X"
+        return playerSymbol;
+    }
 
     const createBoard = () => {
         modal.addEventListener("reset", () => {
@@ -202,7 +169,7 @@ const startGame = (() => {
             const mainContent = document.querySelector(".main");
             const playerName = nameInput.value;
 
-            PlayGame.createPlayer(playerName);
+            const humanPlayer = createPlayer(playerName);
 
             e.preventDefault();
             modal.close();
@@ -228,10 +195,9 @@ const startGame = (() => {
             </div>
             `;
 
-            PlayGame.makeMove();
+            PlayGame.makeMove(humanPlayer);
         });
-    } 
-
+    }
     
     btnPlay.addEventListener("click", e => {
         modal.showModal();
@@ -241,4 +207,3 @@ const startGame = (() => {
     return modal; // now in the public scope
 
 })(); // EIFE (Immediately invoked function expression)
-
