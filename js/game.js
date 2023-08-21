@@ -43,14 +43,13 @@ const Gameboard = {
 }
 
 // Module containing functions for when the game is actually running.
-const PlayGame = () => {
+const PlayGame = (() => {
     // Private functions
     
     const checkMoveValidity = (currentCellIndex) => {
         if (Gameboard.gameboard[currentCellIndex] === "") {
             // Checks if the current index in the gameboard array is an empty string.
             // If it is the move is valid.
-            console.log(Gameboard.gameboard);
             console.log("Move is valid");
             return true;
         } else {
@@ -94,6 +93,7 @@ const PlayGame = () => {
                 checkMoveValidity(currentCellIndex);
                 Gameboard.gameboard.splice(currentCellIndex, 1, "X");
 
+                console.log(Gameboard.gameboard);
                 updateCells(); // Assign current player's X or O to that cell.
                 checkWin();
                 cpuPlayer.cpuEasyMove();
@@ -101,7 +101,7 @@ const PlayGame = () => {
         });
     }
 
-    const cpuPlayer = () => {
+    const cpuPlayer = (() => {
         const cpuPlayerSymbol = "O";
 
         const cpuEasyMove = () => {
@@ -109,20 +109,29 @@ const PlayGame = () => {
             // Use random number from 0 to 8 to get random move.
             // Check if number is a valid move.
 
+            console.log("CPU Making Easy Move");
+
             const getRandomMove = () => {
-                let currentMove = Math.random * 10;
+                let randomMove = Math.random * 10;
+                console.log(`Random number: ${randomMove}`);
+                let currentMove = getRandomMove.randomMove;
                 return currentMove;
             }
-
-            if (currentMove > 8) {
+            
+            if (getRandomMove.currentMove > 8) {
                 // Number is invalid
-                console.log(`CPU move was ${currentMove}`);
+                console.log(`CPU move was ${getRandomMove.currentMove}`);
+                console.log("CPU move was invalid, rerunning...")
                 getRandomMove(); // Re-gen the move.
             } else {
                 checkMoveValidity(); // Number is valid, check move validity.
                 if (checkMoveValidity == true) {
-                    updateCells(currentMove);
-                    console.log(`Move came back valid: ${currentMove}`);
+                    Gameboard.gameboard.splice(currentCellIndex, 1, "O");
+                    updateCells(getRandomMove.currentMove);
+                    console.log(`Move came back valid: ${getRandomMove.currentMove}`);
+                    console.log(Gameboard.gameboard);
+                } else {
+                    console.log("CPU move was invalid, rerunning...")
                 }
             }
         }
@@ -134,21 +143,26 @@ const PlayGame = () => {
             // Check the current status of the array.
         }
 
-        return {
-            cpuEasyMove
-        }
-    }
+        return {cpuEasyMove};
+    })(); // IIFE
 
     const updateCells = () => {
         Gameboard.gameboard.forEach(currentIndex => {
+
+            // currentIndex is null? need to look at why, probably just an issue of when the updateCells function is called.
+            let currentCell = document.querySelector(`[data-index="${currentIndex}"]`);
+
             if (currentIndex === "X") {
                 // Update cell with image of Panda.
+                currentCell.innerHTML = `<img src="/assets/icons/panda-bear-panda-svgrepo-com.svg" alt="">`;
             } else if (currentIndex === "O") {
                 // Update cell with image of Raccoon.
+                currentCell.innerHTML = `<img src="/assets/icons/raccoon-svgrepo-com.svg" alt="">`;
             }
         });
     }
-}
+    return {makeMove};
+})(); // IIFE
 
 const startGame = (() => {
     const btnPlay = document.querySelector("#btn-play");
@@ -156,7 +170,7 @@ const startGame = (() => {
     const nameInput = document.querySelector("#player-name");
 
     // Factory function for creating players.
-    const createPlayer = (playerName) => {
+    const createPlayer = () => {
         const playerSymbol = "X"
         return playerSymbol;
     }
@@ -206,4 +220,4 @@ const startGame = (() => {
 
     return modal; // now in the public scope
 
-})(); // EIFE (Immediately invoked function expression)
+})(); // IIFE (Immediately invoked function expression)
