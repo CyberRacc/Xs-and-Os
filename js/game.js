@@ -111,12 +111,14 @@ const PlayGame = (() => {
 
             console.log("CPU Making Easy Move");
 
-            const getRandomMove = () => {
+            const getRandomMove = (() => {
                 let randomMove = Math.random * 10;
                 console.log(`Random number: ${randomMove}`);
                 let currentMove = getRandomMove.randomMove;
                 return currentMove;
-            }
+            })(); // IIFE
+
+            // maybe a while loop will be useful?
             
             if (getRandomMove.currentMove > 8) {
                 // Number is invalid
@@ -131,7 +133,7 @@ const PlayGame = (() => {
                     console.log(`Move came back valid: ${getRandomMove.currentMove}`);
                     console.log(Gameboard.gameboard);
                 } else {
-                    console.log("CPU move was invalid, rerunning...")
+                    console.log("CPU move was invalid");
                 }
             }
         }
