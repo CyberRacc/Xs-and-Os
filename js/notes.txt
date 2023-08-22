@@ -1,0 +1,35 @@
+/*
+    The main goal of this project is to have as little global code
+    as possible.
+
+    Tips:
+
+        Think of Factory Functions as "Object Creators"
+
+        A factory function at the most basic level is just a function that
+        returns an object, that's it.
+        When you call this function, it gives you an object back. The beauty
+        of this is that you can customise the obejct for different situations
+        each time you call the function.
+
+        If you only need one of something (gameBoard, displayController),
+        use a module.
+
+        If you need multiples of something (players), create
+        them with factories.
+
+        Keep as much as possible private (not exported), exposing only what
+        is necessary.
+
+        Ensure that related functionalities are bundles together.
+*/
+
+/*     I've gone for arrow functions here as I prefer them and do not
+    need the "this" keyword.
+
+    The main difference between arrow functions and traditional
+    function declarations is that arrow functions don't have their own
+    "this", they inherit "this" from the enclsosing scope.
+
+    Tranditional function declarations have their own "this" binding,
+    which is typically set by how they are called. */
