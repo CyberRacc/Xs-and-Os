@@ -1,3 +1,4 @@
+
 const gameState = {
     gameboard: ["", "", "", "", "", "", "", "", ""],
     players: {
@@ -119,6 +120,7 @@ const cpuLogic = (() => {
             }
         }
     }
+
     const cpuHardMove = () => {
         // Hard, the AI actively tries to win by blocking the player.
         // But it's boring to never be able to win so there must be a random
@@ -126,6 +128,7 @@ const cpuLogic = (() => {
 
         // Check the current status of the array.
     }
+
 })(); // IIFE
 
 const domController = (() => {
