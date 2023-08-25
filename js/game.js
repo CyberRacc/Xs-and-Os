@@ -90,6 +90,13 @@ const gameLogic = (() => {
 // Module containing logic for CPU moves, two difficulties, easy and hard.
 const cpuLogic = (() => {
 
+    const getRandomMove = () => {
+        let randomMove = Math.floor(Math.random() * 9);
+        console.log(`Random number: ${randomMove}`);
+        let currentMove = getRandomMove.randomMove;
+        return currentMove;
+    }
+
     const cpuEasyMove = () => {
         // Easy it a random number so the cpu does not actively try to win.
         // Use random number from 0 to 8 to get random move.
@@ -97,12 +104,7 @@ const cpuLogic = (() => {
 
         console.log("CPU Making Easy Move");
 
-        const getRandomMove = () => {
-            let randomMove = Math.random * 10;
-            console.log(`Random number: ${randomMove}`);
-            let currentMove = getRandomMove.randomMove;
-            return currentMove;
-        }
+        getRandomMove();
         
         if (getRandomMove.currentMove > 8) {
             // Number is invalid
@@ -110,6 +112,7 @@ const cpuLogic = (() => {
             console.log("CPU move was invalid, rerunning...")
             getRandomMove(); // Re-gen the move.
         } else {
+            console.log("Number was valid, checking move validity.")
             gameLogic.checkMoveValidity(); // Number is valid, check move validity.
             if (gameLogic.checkMoveValidity == true) {
                 gameState.gameboard.splice(currentCellIndex, 1, cpuSymbol);
@@ -117,7 +120,7 @@ const cpuLogic = (() => {
                 console.log(`Move came back valid: ${getRandomMove.currentMove}`);
                 console.log(gameState.gameboard);
             } else {
-                console.log("CPU move was invalid, failed")
+                console.log("Random number was valid, but move was not.")
             }
         }
     }
