@@ -9,13 +9,12 @@
     --btn-global-color: #7c1b7f;
     --btn-hover-color: #8d2891;
     --btn-active-color: #3f1c53;
-    --header-color: #4a4f8d;
-    --gloabl-background-color: #bdbdbd;
+    --header-color: #794975;
+    --gloabl-background-color: #242424;
     --highlight-modal-color: #536993;
     --global-box-shadow: 1px 1px 5px 0px #000;
     font-family: 'Manrope', sans-serif;
     font-size: clamp(1rem, 1.2rem, 1.5rem);
-    box-sizing: border-box;
 }
 
 body {
@@ -73,6 +72,7 @@ button:active {
     justify-content: center;
     align-content: center;
     color: white;
+    overflow-y: auto;
 }
 
 #board-container {
@@ -88,7 +88,7 @@ button:active {
     width: 500px;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr;
-    background-color: white;
+    background-color: rgb(190, 190, 190);
     border: px solid black;
     box-shadow: var(--global-box-shadow);
 }
@@ -136,6 +136,7 @@ form {
     display: grid;
     grid-template-rows: 1fr 1fr;
     height: 100%;
+    gap: 16px;
 }
 
 input {
@@ -150,6 +151,17 @@ input {
 #name-input {
     display: block;
     text-align: center;
+}
+
+#symbol-input {
+    display: grid;
+    text-align: center;
+}
+
+#symbol-input select {
+    padding: 8px;
+    background-color: transparent;
+    border-radius: 15px;
 }
 
 #form-buttons {
@@ -174,7 +186,7 @@ input {
 
 dialog {
     width: 250px;
-    height: 250px;
+    height: 300px;
     border-radius: 25px;
     box-shadow: var(--global-box-shadow);
     border: none;

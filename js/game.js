@@ -5,23 +5,34 @@ const gameState = {
     players: {
         human: {name: "", symbol: "X"},
         cpu: {name: "CPU", symbol: "O"}
-    }
-
-    // Ternary operator makes the cpuSymbol the opposite of the human player's symbol.
-    // If playerSymbol is "X" then cpuSymbol is "O", otherwise cpuSymbol is "X".
-    // let cpuSymbol = humanPlayer.playerSymbol === "X" ? "O" : "X"; // temp while I work out new refactored logic.
-}
-
-// Factory function for creating players.
-const createPlayer = (name, symbol) => {
-    return {
-        name,
-        symbol
-    };
+    } // add comma here if adding stuff
 }
 
 // Module containing functions for when the game is actually running.
 const gameLogic = (() => {
+
+    // Factory function for creating players. Currently unsused, need to figure out how to use this alongside updatePlayers and gameState.
+    const createPlayer = (name, symbol) => {
+        return {
+            name,
+            symbol
+        };
+    }
+
+    const updatePlayers = () => {
+
+        const nameInput = document.querySelector("#player-name");
+        const playerName = nameInput.value;
+    
+        // Ternary operator makes the cpuSymbol the opposite of the human player's symbol.
+        // If playerSymbol is "X" then cpuSymbol is "O", otherwise cpuSymbol is "X".        const humanPlayer = createPlayer(playerName);
+
+        let cpuSymbol = gameState.players.human.symbol === "X" ? "O" : "X";
+
+        gameState.players.cpu.symbol = cpuSymbol;
+        gameState.players.human.name = playerName;
+        console.log(`Player name is now: ${gameState.players.human.name}`)
+    }
 
     const checkMoveValidity = (currentCellIndex) => {
         if (gameState.gameboard[currentCellIndex] === "") {
@@ -46,7 +57,7 @@ const gameLogic = (() => {
                 console.log(currentCellIndex);
 
                 checkMoveValidity(currentCellIndex);
-                gameState.gameboard.splice(currentCellIndex, 1, "X"); // Hard set as "X" for now.
+                gameState.gameboard.splice(currentCellIndex, 1, gameState.players.cpu.symbol);
 
                 console.log(gameState.gameboard);
                 domController.updateCells(); // Assign current player's X or O to that cell.
@@ -81,7 +92,9 @@ const gameLogic = (() => {
     return {
         checkMoveValidity,
         makeMove,
-        checkWin
+        checkWin,
+        createPlayer,
+        updatePlayers
     };
 
 })(); // IIFE (Immediately Invoked Function Expression)
@@ -93,7 +106,7 @@ const cpuLogic = (() => {
     const getRandomMove = () => {
         let randomMove = Math.floor(Math.random() * 9);
         console.log(`Random number: ${randomMove}`);
-        let currentMove = getRandomMove.randomMove;
+        let currentMove = randomMove;
         return currentMove;
     }
 
@@ -161,18 +174,18 @@ const domController = (() => {
         });
 
         modal.addEventListener("submit", e => {
-            const mainContent = document.querySelector(".main");
-            const nameInput = document.querySelector("#player-name");
-            const playerName = nameInput.value;
-
-            const humanPlayer = createPlayer(playerName);
 
             e.preventDefault();
+            
+            const mainContent = document.querySelector(".main");
+
+            gameLogic.updatePlayers();
             modal.close();
+
             mainContent.innerHTML = `
             <div id="board-container">
                 <div>
-                    <p>Hello ${playerName}!<p>
+                    <p>Hello ${gameState.players.human.name}!<p>
                 </div>
                 <div id="board">
                     <div class="board-cell" data-index="0"></div>
@@ -190,7 +203,6 @@ const domController = (() => {
                 <button>New Game</button>
             </div>
             `;
-
             gameLogic.makeMove();
         });
     }
