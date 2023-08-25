@@ -22,16 +22,24 @@ const gameLogic = (() => {
     const updatePlayers = () => {
 
         const nameInput = document.querySelector("#player-name");
+        const symbolInput = document.querySelector("#player-symbol");
         const playerName = nameInput.value;
+        const playerSymbol = symbolInput.value;
     
         // Ternary operator makes the cpuSymbol the opposite of the human player's symbol.
         // If playerSymbol is "X" then cpuSymbol is "O", otherwise cpuSymbol is "X".        const humanPlayer = createPlayer(playerName);
 
-        let cpuSymbol = gameState.players.human.symbol === "X" ? "O" : "X";
 
-        gameState.players.cpu.symbol = cpuSymbol;
+
+        gameState.players.human.symbol = playerSymbol;
         gameState.players.human.name = playerName;
-        console.log(`Player name is now: ${gameState.players.human.name}`)
+
+        gameState.players.cpu.symbol = gameState.players.human.symbol === "X" ? "O" : "X";
+
+        console.log(`Player name is now: ${gameState.players.human.name}`);
+        console.log(`Player symbol is now ${gameState.players.human.symbol}`);
+
+        console.log(`CPU Symbol is now: ${gameState.players.cpu.symbol}`);
     }
 
     const checkMoveValidity = (currentCellIndex) => {
@@ -226,10 +234,21 @@ const domController = (() => {
         });
     }
 
+    const iconHover = () => {
+        const gameCells = document.querySelectorAll(".board-cell");
+
+        gameCells.forEach((cell) => {
+            cell.addEventListener("mouseover", e => {
+                cell.classList.add("hover-panda") // Make if else statement to check for X or O and replace hover image accordingly.
+            });
+        });
+    }
+
     return {
         startGame,
         createBoard,
-        updateCells
+        updateCells,
+        iconHover
     };
 })(); // IIFE
 
