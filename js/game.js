@@ -24,7 +24,7 @@ const createPlayer = (name, symbol) => {
 const gameLogic = (() => {
 
     const checkMoveValidity = (currentCellIndex) => {
-        if (Gameboard.gameboard[currentCellIndex] === "") {
+        if (gameState.gameboard[currentCellIndex] === "") {
             // Checks if the current index in the gameboard array is an empty string.
             // If it is the move is valid.
             console.log("Move is valid");
@@ -35,7 +35,7 @@ const gameLogic = (() => {
         }
     }
 
-    const makeMove = (humanPlayer) => {
+    const makeMove = () => {
         const gameCells = document.querySelectorAll(".board-cell");
 
         gameCells.forEach(cell => {
@@ -46,12 +46,12 @@ const gameLogic = (() => {
                 console.log(currentCellIndex);
 
                 checkMoveValidity(currentCellIndex);
-                Gameboard.gameboard.splice(currentCellIndex, 1, humanPlayer.playerSymbol);
+                gameState.gameboard.splice(currentCellIndex, 1, "X"); // Hard set as "X" for now.
 
-                console.log(Gameboard.gameboard);
-                updateCells(); // Assign current player's X or O to that cell.
+                console.log(gameState.gameboard);
+                domController.updateCells(); // Assign current player's X or O to that cell.
                 checkWin();
-                cpuPlayer.cpuEasyMove();
+                cpuLogic.cpuEasyMove();
             });
         });
     }
@@ -59,7 +59,7 @@ const gameLogic = (() => {
     const checkWin = () => {
         // Check for 3 of the same letter in a row.
         // shorthand for gameboard array
-        const board = Gameboard.gameboard;
+        const board = gameState.gameboard;
         const winningCombinations = [
             [0, 1, 2],
             [3, 4, 5],
@@ -110,14 +110,14 @@ const cpuLogic = (() => {
             console.log("CPU move was invalid, rerunning...")
             getRandomMove(); // Re-gen the move.
         } else {
-            checkMoveValidity(); // Number is valid, check move validity.
-            if (checkMoveValidity == true) {
-                Gameboard.gameboard.splice(currentCellIndex, 1, cpuSymbol);
-                updateCells(getRandomMove.currentMove);
+            gameLogic.checkMoveValidity(); // Number is valid, check move validity.
+            if (gameLogic.checkMoveValidity == true) {
+                gameState.gameboard.splice(currentCellIndex, 1, cpuSymbol);
+                domController.updateCells(getRandomMove.currentMove);
                 console.log(`Move came back valid: ${getRandomMove.currentMove}`);
-                console.log(Gameboard.gameboard);
+                console.log(gameState.gameboard);
             } else {
-                console.log("CPU move was invalid, rerunning...")
+                console.log("CPU move was invalid, failed")
             }
         }
     }
@@ -130,15 +130,21 @@ const cpuLogic = (() => {
         // Check the current status of the array.
     }
 
+    return {
+        cpuEasyMove,
+        cpuHardMove
+    };
+
 })(); // IIFE
 
 const domController = (() => {
 
     const startGame = () => {
+
+        console.log("Running startGame function");
+
         const btnPlay = document.querySelector("#btn-play");
-        const modal = document.querySelector("#modal");
-        const nameInput = document.querySelector("#player-name");
-    
+        const modal = document.querySelector("#modal");    
         
         btnPlay.addEventListener("click", e => {
             modal.showModal();
@@ -150,8 +156,10 @@ const domController = (() => {
         modal.addEventListener("reset", () => {
             modal.close();
         });
+
         modal.addEventListener("submit", e => {
             const mainContent = document.querySelector(".main");
+            const nameInput = document.querySelector("#player-name");
             const playerName = nameInput.value;
 
             const humanPlayer = createPlayer(playerName);
@@ -180,7 +188,7 @@ const domController = (() => {
             </div>
             `;
 
-            PlayGame.makeMove(humanPlayer);
+            gameLogic.makeMove();
         });
     }
 
@@ -188,7 +196,7 @@ const domController = (() => {
 
         // The forEach method, takes two arguments, the first is the element in the array, the second is the index
         // of that element.
-        Gameboard.gameboard.forEach((currentValue, currentIndex) => {
+        gameState.gameboard.forEach((currentValue, currentIndex) => {
 
             // currentIndex is null? need to look at why, probably just an issue of when the updateCells function is called.
             let currentCell = document.querySelector(`[data-index="${currentIndex}"]`);
