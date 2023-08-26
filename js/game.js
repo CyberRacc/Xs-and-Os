@@ -70,6 +70,8 @@ const gameLogic = (() => {
                 console.log(gameState.gameboard);
                 domController.updateCells(); // Assign current player's X or O to that cell.
                 checkWin();
+
+                // Make CPU easy move
                 cpuLogic.cpuEasyMove();
             });
         });
@@ -211,6 +213,7 @@ const domController = (() => {
                 <button>New Game</button>
             </div>
             `;
+            domController.iconHover();
             gameLogic.makeMove();
         });
     }
@@ -239,9 +242,18 @@ const domController = (() => {
 
         gameCells.forEach((cell) => {
             cell.addEventListener("mouseover", e => {
-                cell.classList.add("hover-panda") // Make if else statement to check for X or O and replace hover image accordingly.
+                console.log(e);
+                gameState.players.human.symbol === "X" ? cell.classList.add("hover-raccoon") : cell.classList.add("hover-panda");
             });
         });
+
+        gameCells.forEach((cell) => {
+            cell.addEventListener("mouseout", e => {
+                console.log(e);
+                cell.classList.remove("hover-raccoon");
+                cell.classList.remove("hover-panda");
+            });
+        })  
     }
 
     return {
@@ -249,7 +261,8 @@ const domController = (() => {
         createBoard,
         updateCells,
         iconHover
-    };
+    }
+
 })(); // IIFE
 
 domController.startGame();
