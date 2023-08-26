@@ -100,9 +100,18 @@ button:active {
     align-items: center;
 }
 
-.board-cell:hover {
+.hover-panda {
     background-color: grey;
     background-image: url(/assets/icons/panda-bear-panda-svgrepo-com.svg);
+    background-size: 100px 100px;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.5;
+}
+
+.hover-raccoon {
+    background-color: grey;
+    background-image: url(/assets/icons/raccoon-svgrepo-com.svg);
     background-size: 100px 100px;
     background-repeat: no-repeat;
     background-position: center;
@@ -156,12 +165,21 @@ input {
 #symbol-input {
     display: grid;
     text-align: center;
+    gap: 12px;
+}
+
+#symbol-input label {
+    display: block;
+    text-align: center;
 }
 
 #symbol-input select {
-    padding: 8px;
-    background-color: transparent;
-    border-radius: 15px;
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    margin: 0;
+    border-radius: 20px;
+    border: 1px solid rgb(207, 207, 207);
 }
 
 #form-buttons {
@@ -186,7 +204,7 @@ input {
 
 dialog {
     width: 250px;
-    height: 300px;
+    height: 410px;
     border-radius: 25px;
     box-shadow: var(--global-box-shadow);
     border: none;
