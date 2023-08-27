@@ -3,8 +3,8 @@
 const gameState = {
     gameboard: ["", "", "", "", "", "", "", "", ""],
     players: {
-        human: {name: "", symbol: "X"},
-        cpu: {name: "CPU", symbol: "O"}
+        human: {name: "", symbol: ""},
+        cpu: {name: "CPU", symbol: ""}
     } // add comma here if adding stuff
 }
 
@@ -43,6 +43,7 @@ const gameLogic = (() => {
     }
 
     const checkMoveValidity = (currentCellIndex) => {
+        console.log(`Checking move validity of move: ${currentCellIndex}`)
         if (gameState.gameboard[currentCellIndex] === "") {
             // Checks if the current index in the gameboard array is an empty string.
             // If it is the move is valid.
@@ -61,18 +62,19 @@ const gameLogic = (() => {
             cell.addEventListener("click", () => {
                 
                 // Grab the index of the cell that was clicked & convert to number.
-                const currentCellIndex = Number(cell.dataset.index);
+                let currentCellIndex = Number(cell.dataset.index);
                 console.log(currentCellIndex);
 
-                checkMoveValidity(currentCellIndex);
-                gameState.gameboard.splice(currentCellIndex, 1, gameState.players.cpu.symbol);
+                if (checkMoveValidity(currentCellIndex)) {
+                    gameState.gameboard.splice(currentCellIndex, 1, gameState.players.human.symbol);
 
-                console.log(gameState.gameboard);
-                domController.updateCells(); // Assign current player's X or O to that cell.
-                checkWin();
-
-                // Make CPU easy move
-                cpuLogic.cpuEasyMove();
+                    console.log(gameState.gameboard);
+                    domController.updateCells(); // Assign current player's X or O to that cell.
+                    checkWin();
+    
+                    // Make CPU easy move
+                    cpuLogic.cpuEasyMove();
+                }
             });
         });
     }
@@ -81,6 +83,8 @@ const gameLogic = (() => {
         // Check for 3 of the same letter in a row.
         // shorthand for gameboard array
         const board = gameState.gameboard;
+        
+        // These are the possible winning combinations in a Tic Tac Toe game.
         const winningCombinations = [
             [0, 1, 2],
             [3, 4, 5],
@@ -91,13 +95,31 @@ const gameLogic = (() => {
             [0, 4, 8],
             [2, 4, 6]
         ];
-
-        winningCombinations.some(winComb => {
-            if (winComb == board) {
-                console.log("X Wins!");
+    
+        // The .some() method tests whether at least one element in the array 
+        // passes the test implemented by the provided function.
+        // In this case, it checks if any of the winningCombinations lead to a win.
+        const isWin = winningCombinations.some(winComb => {
+    
+            // The .every() method tests whether all elements in the array 
+            // pass the test implemented by the provided function.
+            // Here, it checks if all positions in the current winComb have the value "X" on the board.
+            if (winComb.every(position => board[position] === "X")) {
+                console.log("Raccoon Wins");
+                return true;  // Return true to indicate a win for "X"
+            } 
+            // Similarly, this checks if all positions in the current winComb have the value "O" on the board.
+            else if (winComb.every(position => board[position] === "O")) {
+                console.log("Panda Wins");
+                return true;  // Return true to indicate a win for "O"
             }
+    
+            // If neither of the above conditions is met, return false for this winComb.
+            return false;
         });
-    }
+    
+        return isWin;  // This will be true if there's a win, otherwise false.
+    }    
 
     return {
         checkMoveValidity,
@@ -116,8 +138,7 @@ const cpuLogic = (() => {
     const getRandomMove = () => {
         let randomMove = Math.floor(Math.random() * 9);
         console.log(`Random number: ${randomMove}`);
-        let currentMove = randomMove;
-        return currentMove;
+        return randomMove;
     }
 
     const cpuEasyMove = () => {
@@ -127,25 +148,25 @@ const cpuLogic = (() => {
 
         console.log("CPU Making Easy Move");
 
-        getRandomMove();
-        
-        if (getRandomMove.currentMove > 8) {
-            // Number is invalid
-            console.log(`CPU move was ${getRandomMove.currentMove}`);
-            console.log("CPU move was invalid, rerunning...")
-            getRandomMove(); // Re-gen the move.
-        } else {
-            console.log("Number was valid, checking move validity.")
-            gameLogic.checkMoveValidity(); // Number is valid, check move validity.
-            if (gameLogic.checkMoveValidity == true) {
-                gameState.gameboard.splice(currentCellIndex, 1, cpuSymbol);
-                domController.updateCells(getRandomMove.currentMove);
-                console.log(`Move came back valid: ${getRandomMove.currentMove}`);
+        let validMoveLoopChecker = false;
+
+
+        // BUG: Infinite loop occurs when selecting the last tile on the board.
+        while (!validMoveLoopChecker) {
+            let currentCellIndex = getRandomMove();
+
+            if (gameLogic.checkMoveValidity(currentCellIndex)) {
+
+                console.log(`CPU Move Index: ${currentCellIndex}`);
+                console.log(`Move valid? - ${gameLogic.checkMoveValidity(currentCellIndex)}`);
+                gameState.gameboard.splice(currentCellIndex, 1, gameState.players.cpu.symbol);
                 console.log(gameState.gameboard);
-            } else {
-                console.log("Random number was valid, but move was not.")
+                domController.updateCells(currentCellIndex);
+                validMoveLoopChecker = true;
             }
+            console.log("While Loop!!!")
         }
+        gameLogic.checkWin();
     }
 
     const cpuHardMove = () => {
@@ -227,10 +248,10 @@ const domController = (() => {
             // currentIndex is null? need to look at why, probably just an issue of when the updateCells function is called.
             let currentCell = document.querySelector(`[data-index="${currentIndex}"]`);
 
-            if (currentValue === "X") {
+            if (currentValue === "O") {
                 // Update cell with image of Panda.
                 currentCell.innerHTML = `<img src="/assets/icons/panda-bear-panda-svgrepo-com.svg" alt="">`;
-            } else if (currentValue === "O") {
+            } else if (currentValue === "X") {
                 // Update cell with image of Raccoon.
                 currentCell.innerHTML = `<img src="/assets/icons/raccoon-svgrepo-com.svg" alt="">`;
             }
@@ -242,25 +263,28 @@ const domController = (() => {
 
         gameCells.forEach((cell) => {
             cell.addEventListener("mouseover", e => {
-                console.log(e);
                 gameState.players.human.symbol === "X" ? cell.classList.add("hover-raccoon") : cell.classList.add("hover-panda");
             });
         });
 
         gameCells.forEach((cell) => {
             cell.addEventListener("mouseout", e => {
-                console.log(e);
                 cell.classList.remove("hover-raccoon");
                 cell.classList.remove("hover-panda");
             });
         })  
     }
 
+    const endGame = () => {
+        
+    }
+
     return {
         startGame,
         createBoard,
         updateCells,
-        iconHover
+        iconHover,
+        endGame
     }
 
 })(); // IIFE
