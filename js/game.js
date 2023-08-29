@@ -3,8 +3,8 @@
 const gameState = {
     gameboard: ["", "", "", "", "", "", "", "", ""],
     players: {
-        human: {name: "", symbol: ""},
-        cpu: {name: "CPU", symbol: ""}
+        human: {name: "", symbol: "", winner: false},
+        cpu: {name: "CPU", symbol: "", winner: false}
     } // add comma here if adding stuff
 }
 
@@ -21,19 +21,16 @@ const gameLogic = (() => {
 
     const updatePlayers = () => {
 
-        const nameInput = document.querySelector("#player-name");
-        const symbolInput = document.querySelector("#player-symbol");
+        const nameInput = document.getElementById("player-name");
+        const symbolInput = document.getElementById("player-symbol");
         const playerName = nameInput.value;
         const playerSymbol = symbolInput.value;
-    
-        // Ternary operator makes the cpuSymbol the opposite of the human player's symbol.
-        // If playerSymbol is "X" then cpuSymbol is "O", otherwise cpuSymbol is "X".        const humanPlayer = createPlayer(playerName);
-
-
 
         gameState.players.human.symbol = playerSymbol;
         gameState.players.human.name = playerName;
 
+        // Ternary operator makes the cpuSymbol the opposite of the human player's symbol.
+        // If playerSymbol is "X" then cpuSymbol is "O", otherwise cpuSymbol is "X".        const humanPlayer = createPlayer(playerName);
         gameState.players.cpu.symbol = gameState.players.human.symbol === "X" ? "O" : "X";
 
         console.log(`Player name is now: ${gameState.players.human.name}`);
@@ -70,7 +67,11 @@ const gameLogic = (() => {
 
                     console.log(gameState.gameboard);
                     domController.updateCells(); // Assign current player's X or O to that cell.
-                    checkWin();
+                    
+                    if (checkWin()) {
+                        gameState.players.human.winner = true;
+                        domController.endGame();
+                    }
     
                     // Make CPU easy move
                     cpuLogic.cpuEasyMove();
@@ -166,7 +167,10 @@ const cpuLogic = (() => {
             }
             console.log("While Loop!!!")
         }
-        gameLogic.checkWin();
+        if (gameLogic.checkWin()) {
+            gameState.players.cpu.winner = true;
+            domController.endGame();
+        }
     }
 
     const cpuHardMove = () => {
@@ -190,8 +194,8 @@ const domController = (() => {
 
         console.log("Running startGame function");
 
-        const btnPlay = document.querySelector("#btn-play");
-        const modal = document.querySelector("#modal");    
+        const btnPlay = document.getElementById("btn-play");
+        const modal = document.getElementById("modal");    
         
         btnPlay.addEventListener("click", e => {
             modal.showModal();
@@ -276,7 +280,37 @@ const domController = (() => {
     }
 
     const endGame = () => {
-        
+        const mainContent = document.querySelector(".main");
+
+        let winnerName = gameState.players.cpu.winner ? gameState.players.cpu.name : gameState.players.human.name;
+        let winnerSymbol = gameState.players.cpu.winner ? gameState.players.cpu.symbol : gameState.players.human.symbol;
+
+        let winnerIconUpdate = winnerSymbol === "X" ? "/assets/icons/raccoon-svgrepo-com.svg" : "/assets/icons/panda-bear-panda-svgrepo-com.svg";
+
+        mainContent.innerHTML = `
+        <div id="display-winner">
+            <img src="${winnerIconUpdate}" alt="">
+            <h2>${winnerName} Wins!</h2>
+            <button id="btn-play-again">Play Again</button>
+        </div>
+        `;
+        resetGame();
+    }
+
+    const resetGame = () => {
+        const btnPlayAgain = document.getElementById("btn-play-again");
+        const mainContent = document.querySelector(".main");
+        const modal = document.getElementById("modal")
+;
+        btnPlayAgain.addEventListener("click", e => {
+            gameState.players.cpu.winner = false;
+            gameState.players.human.winner = false;
+            gameState.gameboard = ["", "", "", "", "", "", "", "", ""];
+
+            mainContent.innerHTML = ""
+            modal.showModal();
+            createBoard();
+        });
     }
 
     return {
