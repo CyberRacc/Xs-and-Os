@@ -17,7 +17,7 @@ Build with simple HTML, CSS and JavaScript.
 ## Things I learned during this project
 - How to organise code into modules, methods and objects and only expose and call what is necessary within the given scope.
 - How to properly create and use a factory function.
-- How to create, manage and utilise private and public objects and methods.
+- How to create, manage and utilise private and public variables, objects, and methods.
 - How to create and manage the state of a game inside of a specific object.
 - How to use ternary operators in more complex situations.
 - How to create a basic CPU player that makes its moves based on a random number.
