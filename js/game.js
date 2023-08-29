@@ -254,10 +254,10 @@ const domController = (() => {
 
             if (currentValue === "O") {
                 // Update cell with image of Panda.
-                currentCell.innerHTML = `<img src="/assets/icons/panda-bear-panda-svgrepo-com.svg" alt="">`;
+                currentCell.innerHTML = `<img src="assets/icons/panda-bear-panda-svgrepo-com.svg" alt="">`;
             } else if (currentValue === "X") {
                 // Update cell with image of Raccoon.
-                currentCell.innerHTML = `<img src="/assets/icons/raccoon-svgrepo-com.svg" alt="">`;
+                currentCell.innerHTML = `<img src="assets/icons/raccoon-svgrepo-com.svg" alt="">`;
             }
         });
     }
@@ -285,7 +285,7 @@ const domController = (() => {
         let winnerName = gameState.players.cpu.winner ? gameState.players.cpu.name : gameState.players.human.name;
         let winnerSymbol = gameState.players.cpu.winner ? gameState.players.cpu.symbol : gameState.players.human.symbol;
 
-        let winnerIconUpdate = winnerSymbol === "X" ? "/assets/icons/raccoon-svgrepo-com.svg" : "/assets/icons/panda-bear-panda-svgrepo-com.svg";
+        let winnerIconUpdate = winnerSymbol === "X" ? "assets/icons/raccoon-svgrepo-com.svg" : "assets/icons/panda-bear-panda-svgrepo-com.svg";
 
         mainContent.innerHTML = `
         <div id="display-winner">
