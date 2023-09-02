@@ -307,7 +307,7 @@ const domController = (() => {
             gameState.players.human.winner = false;
             gameState.gameboard = ["", "", "", "", "", "", "", "", ""];
 
-            mainContent.innerHTML = ""
+            mainContent.innerHTML = `<button id="btn-play">Play</button>`
             modal.showModal();
             createBoard();
         });
