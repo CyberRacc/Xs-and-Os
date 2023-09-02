@@ -32,22 +32,14 @@ const gameLogic = (() => {
         // Ternary operator makes the cpuSymbol the opposite of the human player's symbol.
         // If playerSymbol is "X" then cpuSymbol is "O", otherwise cpuSymbol is "X".        const humanPlayer = createPlayer(playerName);
         gameState.players.cpu.symbol = gameState.players.human.symbol === "X" ? "O" : "X";
-
-        console.log(`Player name is now: ${gameState.players.human.name}`);
-        console.log(`Player symbol is now ${gameState.players.human.symbol}`);
-
-        console.log(`CPU Symbol is now: ${gameState.players.cpu.symbol}`);
     }
 
     const checkMoveValidity = (currentCellIndex) => {
-        console.log(`Checking move validity of move: ${currentCellIndex}`)
         if (gameState.gameboard[currentCellIndex] === "") {
             // Checks if the current index in the gameboard array is an empty string.
             // If it is the move is valid.
-            console.log("Move is valid");
             return true;
         } else {
-            console.log("Move is invalid");
             return false;
         }
     }
@@ -60,12 +52,10 @@ const gameLogic = (() => {
                 
                 // Grab the index of the cell that was clicked & convert to number.
                 let currentCellIndex = Number(cell.dataset.index);
-                console.log(currentCellIndex);
 
                 if (checkMoveValidity(currentCellIndex)) {
                     gameState.gameboard.splice(currentCellIndex, 1, gameState.players.human.symbol);
 
-                    console.log(gameState.gameboard);
                     domController.updateCells(); // Assign current player's X or O to that cell.
                     
                     if (checkWin()) {
@@ -96,7 +86,7 @@ const gameLogic = (() => {
             [0, 4, 8],
             [2, 4, 6]
         ];
-    
+
         // The .some() method tests whether at least one element in the array 
         // passes the test implemented by the provided function.
         // In this case, it checks if any of the winningCombinations lead to a win.
@@ -106,12 +96,10 @@ const gameLogic = (() => {
             // pass the test implemented by the provided function.
             // Here, it checks if all positions in the current winComb have the value "X" on the board.
             if (winComb.every(position => board[position] === "X")) {
-                console.log("Raccoon Wins");
                 return true;  // Return true to indicate a win for "X"
             } 
             // Similarly, this checks if all positions in the current winComb have the value "O" on the board.
             else if (winComb.every(position => board[position] === "O")) {
-                console.log("Panda Wins");
                 return true;  // Return true to indicate a win for "O"
             }
     
@@ -138,7 +126,6 @@ const cpuLogic = (() => {
 
     const getRandomMove = () => {
         let randomMove = Math.floor(Math.random() * 9);
-        console.log(`Random number: ${randomMove}`);
         return randomMove;
     }
 
@@ -147,10 +134,7 @@ const cpuLogic = (() => {
         // Use random number from 0 to 8 to get random move.
         // Check if number is a valid move.
 
-        console.log("CPU Making Easy Move");
-
         let validMoveLoopChecker = false;
-
 
         // BUG: Infinite loop occurs when selecting the last tile on the board.
         while (!validMoveLoopChecker) {
@@ -158,14 +142,10 @@ const cpuLogic = (() => {
 
             if (gameLogic.checkMoveValidity(currentCellIndex)) {
 
-                console.log(`CPU Move Index: ${currentCellIndex}`);
-                console.log(`Move valid? - ${gameLogic.checkMoveValidity(currentCellIndex)}`);
                 gameState.gameboard.splice(currentCellIndex, 1, gameState.players.cpu.symbol);
-                console.log(gameState.gameboard);
                 domController.updateCells(currentCellIndex);
                 validMoveLoopChecker = true;
             }
-            console.log("While Loop!!!")
         }
         if (gameLogic.checkWin()) {
             gameState.players.cpu.winner = true;
@@ -192,11 +172,9 @@ const domController = (() => {
 
     const startGame = () => {
 
-        console.log("Running startGame function");
-
         const btnPlay = document.getElementById("btn-play");
-        const modal = document.getElementById("modal");    
-        
+        const modal = document.getElementById("modal");
+
         btnPlay.addEventListener("click", e => {
             modal.showModal();
             createBoard();
@@ -211,7 +189,7 @@ const domController = (() => {
         modal.addEventListener("submit", e => {
 
             e.preventDefault();
-            
+
             const mainContent = document.querySelector(".main");
 
             gameLogic.updatePlayers();
@@ -276,7 +254,7 @@ const domController = (() => {
                 cell.classList.remove("hover-raccoon");
                 cell.classList.remove("hover-panda");
             });
-        })  
+        });
     }
 
     const endGame = () => {
@@ -309,6 +287,7 @@ const domController = (() => {
 
             mainContent.innerHTML = `<button id="btn-play">Play</button>`
             modal.showModal();
+            startGame();
             createBoard();
         });
     }
